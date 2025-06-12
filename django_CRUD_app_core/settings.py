@@ -72,6 +72,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_CRUD_app_core.wsgi.application'
 
+# Custom authentication backend VIP<=============
+AUTHENTICATION_BACKENDS = [
+    'CRUD_app.backends.EmailOrUsernameBackend',  # use your app name
+    'django.contrib.auth.backends.ModelBackend', # keep this for admin login
+]
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
