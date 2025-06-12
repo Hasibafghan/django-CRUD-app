@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     #my apps:
-    'CRUD_app.apps.CrudAppConfig'
+    'CRUD_app.apps.CrudAppConfig',
+
+    # Libraries
+    'widget_tweaks',  # for adding bootstrap classes to form fields
 ]
 
 MIDDLEWARE = [
