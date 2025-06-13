@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <link rel="stylesheet" href="{% static 'css/search_bar.css' %}" />
+  <div class="container  mt-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-10 col-lg-12">
+        <div class="card shadow-lg border-0 mb-4">
+          <div class="card-body p-4">
+            {% if user.is_authenticated %}
+              <h2 class="mb-4 text-center">Records:</h2>
+              <div class="d-flex justify-content-end align-items-center mb-4">
+                <!-- Search Form (Right-aligned, modern styling) -->
+                <form action="" method="POST" class="input-group shadow-sm search-form" role="search" style="max-width: 400px; width: 100%;">
+                  {% csrf_token %}
+                  <input class="form-control border-0 rounded-start-pill px-4 py-2 bg-light search-input" name="search" type="search" placeholder="🔍 Search for Record..." aria-label="Search" style="box-shadow: none;" />
+                  <button class="btn btn-success rounded-end-pill px-4 py-2 d-flex align-items-center search-btn" type="submit" style="transition: background 0.2s;"><i class="bi-search me-2"></i> Search</button>
+                </form>
+                <!-- "Add Record" Button (Top-right, prominent) -->
+                <a href="" class="btn btn-primary ms-2 d-flex align-items-center"><i class="bi-plus-circle me-2"></i>Record</a>
+              </div>
+              {% if records %}
+                <div class="table-responsive">
+                  <table class="table table-bordered align-middle table-hover">
+                    <thead class="table-light">
+                      <tr>
+                        <th>image</th>
+                        <th>Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>City</th>
+                        <th>Address</th>
+                        <th>State</th>
+                        <th>Zipcode</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for record in records %}
+                        <tr>
+                          <td>
+                            {% if record.image and record.image.url %}
+                              <img src="{{ record.image.url }}" alt="Record Image" class="img-fluid rounded-circle" style="width: 50px; height: 50px;" />
+                            {% else %}
+                              <img src="{% static 'images/default.png' %}" alt="Default Image" class="img-fluid rounded-circle" style="width: 50px; height: 50px;" />
+                            {% endif %}
+                          </td>
+                          <td>{{ record.first_name }}</td>
+                          <td>{{ record.last_name }}</td>
+                          <td>{{ record.email }}</td>
+                          <td>{{ record.phone }}</td>
+                          <td>{{ record.city }}</td>
+                          <td>{{ record.address }}</td>
+                          <td>{{ record.state }}</td>
+                          <td>{{ record.zipcode }}</td>
+                          <td>
+                            <a href="" class="btn btn-sm btn-warning  ">Edit</a>
+                            <a href="#" class="btn btn-sm btn-danger" onclick="confirmDelete('{{ record.id }}'); return false;">Delete</a>
+                            <form id="delete-form-{{ record.id }}" action="" method="POST" style="display: none;">
+                              {% csrf_token %}
+                            </form>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                </div>
+              {% else %}
+                <h4 class="text-center mt-4">No record added!</h4>
+              {% endif %}
+            {% else %}
+              <h3 class="text-center">Please login to view and add records.</h3>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/sweetie_alert.js' %}"></script>
+  {% comment %} <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> {% endcomment %}
+{% endblock %}

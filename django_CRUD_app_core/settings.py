@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # Libraries
     'widget_tweaks',  # for adding bootstrap classes to form fields
+    'django_cleanup.apps.CleanupConfig',  # for auto deleting media files
 ]
 
 MIDDLEWARE = [

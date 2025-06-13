@@ -2,11 +2,17 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login , logout , authenticate
 from django.contrib import messages
 from django.contrib.auth.models import User
+from .models import Record
 from .forms import UserRegistrationForm
 
 # Create your views here.
 def home(request):
     return render(request , 'home.html' , {})
+
+
+def record_view(request):
+    records = Record.objects.all()
+    return render(request , 'records_view.html' , {'records' : records})
 
 
 def signup_user(request):

@@ -38,7 +38,7 @@ class UserRegistrationForm(UserCreationForm):
     def clean_email(self):
         email = self.cleaned_data['email']
         if User.objects.filter(email=email).exists():
-            raise forms.ValidationError("Email is already registered. Try to login.")
+            raise forms.ValidationError("Email is already registered, Try to login.")
         return email
 
     def clean(self):
@@ -51,6 +51,6 @@ class UserRegistrationForm(UserCreationForm):
         
         return cleaned_data
 
-class Meta:
+    class Meta:
         model = User
         fields = ['name', 'last_name', 'email', 'username', 'password1', 'password2']
