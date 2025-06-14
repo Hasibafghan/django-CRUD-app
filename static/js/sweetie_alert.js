@@ -34,6 +34,34 @@ function confirmDelete(recordId) {
         }
     })
 }
+
+// for records_view sweetie alert
+// This script should be included after the SweetAlert2 library is loaded
+document.addEventListener('DOMContentLoaded', function () {
+    // Delete button handler
+    document.querySelectorAll('.delete-btn').forEach((button) => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault() // This is CRUCIAL to prevent any default behavior
+            e.stopPropagation() // Prevent event bubbling
+
+            const form = this.closest('form')
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit() // Only submit if confirmed
+                }
+            })
+        })
+    })
+})
 // Example usage to avoid unused function warnings
 // showAlert();
 // showError();

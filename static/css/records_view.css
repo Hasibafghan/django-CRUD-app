@@ -1,0 +1,78 @@
+.avatar {
+  width: 40px;
+  height: 40px;
+}
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.search-form .form-control:focus {
+  box-shadow: none;
+  border-color: #0d6efd;
+}
+.table-hover tbody tr:hover {
+  background-color: rgba(13, 110, 253, 0.05);
+}
+.table thead th {
+  border-bottom: none;
+  padding: 1rem;
+}
+.table tbody td {
+  padding: 1rem;
+  vertical-align: middle;
+}
+.card {
+  border: none;
+  border-radius: 12px;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input {
+  border: 1px solid #e0e0e0;
+  padding-left: 2.5rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.search-input:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 2px 12px rgba(13, 110, 253, 0.2);
+  outline: none;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1.25rem;
+  color: #6c757d;
+  pointer-events: none;
+}
+
+.search-btn {
+  position: absolute;
+  right: 4px;
+  background: #0d6efd;
+  color: white;
+  border: none;
+  height: calc(100% - 8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.search-btn:hover {
+  background: #0b5ed7;
+  transform: translateX(2px);
+}
+
+@media (max-width: 576px) {
+  .search-input {
+    min-width: 220px !important;
+  }
+}

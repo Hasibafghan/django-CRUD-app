@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <link rel="stylesheet" href="{% static 'css/record_detail.css' %}" />
+  <div class="container my-5">
+    <div class="card shadow-lg border-0 overflow-hidden" style="max-width: 900px; margin: 0 auto;">
+      <div class="row g-0">
+        {% if record and record.image and record.image.url %}
+          <div class="col-md-5 position-relative">
+            <div class="image-container h-100">
+              <img src="{{ record.image.url }}" class="img-fluid h-100 w-100 object-fit-cover" alt="Record Image" />
+              <div class="image-overlay"></div>
+            </div>
+          </div>
+        {% endif %}
+        <div class="col-md-7">
+          <div class="card-body p-4 p-lg-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+              <h2 class="card-title mb-0 fw-bold text-gradient">Record Details</h2>
+              <a href="{% url 'records_view' %}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left me-1"></i> Back</a>
+            </div>
+
+            <div class="detail-grid">
+              <div class="detail-item">
+                <span class="detail-label">ID</span>
+                <span class="detail-value">{{ record.id }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Full Name</span>
+                <span class="detail-value">{{ record.first_name }} {{ record.last_name }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Email</span>
+                <span class="detail-value text-truncate">{{ record.email }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Phone</span>
+                <span class="detail-value">{{ record.phone }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Location</span>
+                <span class="detail-value">{{ record.city }}, {{ record.state }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Address</span>
+                <span class="detail-value">{{ record.address }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Zip Code</span>
+                <span class="detail-value">{{ record.zipcode }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="detail-label">Created At</span>
+                <span class="detail-value">{{ record.created_at }}</span>
+              </div>
+            </div>
+
+            <div class="mt-4 d-flex gap-2">
+              <a href="#" class="btn btn-primary flex-grow-1 py-2"><i class="bi bi-pencil-square me-2"></i> Edit Record</a>
+
+              <form action="{% url 'delete_record' record.id %}" method="POST">
+                {% csrf_token %}
+                <button href="" class="btn btn-danger flex-grow-2 py-2 delete-btn"><i class="bi bi-trash me-2"></i> Delete</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="{% static 'js/sweetie_alert.js' %}"></script>
+{% endblock %}

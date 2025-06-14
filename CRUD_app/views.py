@@ -1,18 +1,42 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect , get_object_or_404
 from django.contrib.auth import login , logout , authenticate
+from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Record
 from .forms import UserRegistrationForm
+
+
 
 # Create your views here.
 def home(request):
     return render(request , 'home.html' , {})
 
 
+
 def record_view(request):
-    records = Record.objects.all()
-    return render(request , 'records_view.html' , {'records' : records})
+        records = Record.objects.all()
+        return render(request , 'records_view.html' , {'records' : records})
+
+
+
+def record_detail(request , pk):
+    # my_record = Record.objects.get(pk=pk)
+    record = get_object_or_404(Record , pk = pk)
+    return render(request , 'record_detail.html' ,{'record' : record})
+
+
+
+
+@require_http_methods(["DELETE", "POST"])
+def record_delete(request, pk):
+    record = get_object_or_404(Record, pk=pk)
+    if request.method in ['POST', 'DELETE']:
+        record.delete()
+        messages.success(request, 'Record deleted successfully')
+        return redirect('records_view')
+    messages.error(request, 'Invalid request method')
+    return redirect('record_detail', pk=pk)
 
 
 def signup_user(request):
@@ -64,6 +88,7 @@ def signup_user(request):
 #     else:
 #         form = UserRegistrationForm()
 #     return render(request, 'signup_user.html', {'form': form})
+
 
 
 def login_user(request):

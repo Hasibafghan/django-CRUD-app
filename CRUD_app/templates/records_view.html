@@ -1,65 +1,84 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-  <link rel="stylesheet" href="{% static 'css/search_bar.css' %}" />
-  <div class="container  mt-5">
+  <link rel="stylesheet" href="{% static 'css/records_view.css' %}" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" />
+  <link rel="stylesheet" href="" />
+  <div class="container mt-5">
     <div class="row justify-content-center">
-      <div class="col-12 col-md-10 col-lg-12">
-        <div class="card shadow-lg border-0 mb-4">
-          <div class="card-body p-4">
+      <div class="col-12 col-xl-10">
+        <div class="card shadow-sm border-0 mb-4">
+          <div class="card-body p-4 p-md-5">
             {% if user.is_authenticated %}
-              <h2 class="mb-4 text-center">Records:</h2>
-              <div class="d-flex justify-content-end align-items-center mb-4">
-                <!-- Search Form (Right-aligned, modern styling) -->
-                <form action="" method="POST" class="input-group shadow-sm search-form" role="search" style="max-width: 400px; width: 100%;">
-                  {% csrf_token %}
-                  <input class="form-control border-0 rounded-start-pill px-4 py-2 bg-light search-input" name="search" type="search" placeholder="🔍 Search for Record..." aria-label="Search" style="box-shadow: none;" />
-                  <button class="btn btn-success rounded-end-pill px-4 py-2 d-flex align-items-center search-btn" type="submit" style="transition: background 0.2s;"><i class="bi-search me-2"></i> Search</button>
-                </form>
-                <!-- "Add Record" Button (Top-right, prominent) -->
-                <a href="" class="btn btn-primary ms-2 d-flex align-items-center"><i class="bi-plus-circle me-2"></i>Record</a>
+              <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0 fw-bold text-primary">Records Management</h2>
+                <div class="d-flex align-items-center gap-2">
+                  <!-- Enhanced Search Form -->
+                  <form action="" method="POST" class="position-relative" role="search">
+                    {% csrf_token %}
+                    <div class="search-container">
+                      <input class="form-control search-input rounded-pill ps-5 pe-4 py-2" name="search" type="search" placeholder="Search records..." aria-label="Search" style="min-width: 280px;" />
+                      <i class="bi bi-search search-icon"></i>
+                      <button class="btn search-btn rounded-pill px-3" type="submit"><i class="bi bi-arrow-right"></i></button>
+                    </div>
+                  </form>
+
+                  <!-- Add Record Button -->
+                  <a href="" class="btn btn-primary rounded-pill px-4 d-flex align-items-center shadow-sm"><i class="bi bi-plus-lg me-2"></i>Add Record</a>
+                </div>
               </div>
+
               {% if records %}
-                <div class="table-responsive">
-                  <table class="table table-bordered align-middle table-hover">
-                    <thead class="table-light">
+                <div class="table-responsive rounded-3 overflow-hidden border">
+                  <table class="table table-hover mb-0">
+                    <thead class="bg-primary text-white">
                       <tr>
-                        <th>image</th>
-                        <th>Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>City</th>
-                        <th>Address</th>
-                        <th>State</th>
-                        <th>Zipcode</th>
-                        <th>Action</th>
+                        <th style="width: 60px;"></th>
+                        <th>ID</th>
+                        <th>Full Name</th>
+                        <th>Contact</th>
+                        <th>Location</th>
+                        <th class="text-end">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {% for record in records %}
-                        <tr>
+                        <tr class="position-relative" onclick="window.location='{% url 'record_detail' record.id %}';" style="cursor: pointer;">
                           <td>
-                            {% if record.image and record.image.url %}
-                              <img src="{{ record.image.url }}" alt="Record Image" class="img-fluid rounded-circle" style="width: 50px; height: 50px;" />
-                            {% else %}
-                              <img src="{% static 'images/default.png' %}" alt="Default Image" class="img-fluid rounded-circle" style="width: 50px; height: 50px;" />
-                            {% endif %}
+                            <div class="avatar avatar-md">
+                              {% if record.image and record.image.url %}
+                                <img src="{{ record.image.url }}" alt="Record Image" class="rounded-circle object-fit-cover" />
+                              {% else %}
+                                <img src="{% static 'images/default.png' %}" alt="Default Image" class="rounded-circle object-fit-cover" />
+                              {% endif %}
+                            </div>
                           </td>
-                          <td>{{ record.first_name }}</td>
-                          <td>{{ record.last_name }}</td>
-                          <td>{{ record.email }}</td>
-                          <td>{{ record.phone }}</td>
-                          <td>{{ record.city }}</td>
-                          <td>{{ record.address }}</td>
-                          <td>{{ record.state }}</td>
-                          <td>{{ record.zipcode }}</td>
+                          <td class="fw-semibold">#{{ record.id }}</td>
                           <td>
-                            <a href="" class="btn btn-sm btn-warning  ">Edit</a>
-                            <a href="#" class="btn btn-sm btn-danger" onclick="confirmDelete('{{ record.id }}'); return false;">Delete</a>
-                            <form id="delete-form-{{ record.id }}" action="" method="POST" style="display: none;">
-                              {% csrf_token %}
-                            </form>
+                            <div class="d-flex flex-column">
+                              <span class="fw-semibold">{{ record.first_name }} {{ record.last_name }}</span>
+                              <small class="text-muted">{{ record.email }}</small>
+                            </div>
+                          </td>
+                          <td>{{ record.phone }}</td>
+                          <td>
+                            <div class="d-flex flex-column">
+                              <span>{{ record.city }}, {{ record.state }}</span>
+                              <small class="text-muted">Zipcode: {{ record.zipcode }}</small>
+                            </div>
+                          </td>
+                          <td class="text-end">
+                            <div class="btn-group" role="group">
+                              <!-- Edit Button -->
+                              <a href="" class="btn btn-sm btn-outline-primary rounded-pill me-1"><i class="bi bi-pencil-square"></i></a>
+
+                              <!-- Delete Button -->
+                              <form class="d-inline delete-form" action="{% url 'delete_record' record.id %}" method="POST">
+                                {% csrf_token %}
+                                <button type="button" class="btn btn-sm btn-outline-danger rounded-pill delete-btn"><i class="bi bi-trash"></i></button>
+                              </form>
+                            </div>
+                            
                           </td>
                         </tr>
                       {% endfor %}
@@ -67,10 +86,21 @@
                   </table>
                 </div>
               {% else %}
-                <h4 class="text-center mt-4">No record added!</h4>
+                <div class="text-center py-5">
+                  <div class="py-5">
+                    <i class="bi bi-folder-x text-muted" style="font-size: 3rem;"></i>
+                    <h4 class="mt-3 text-muted">No records found</h4>
+                    <p class="text-muted">Add your first record by clicking the "Add Record" button</p>
+                    <a href="" class="btn btn-primary mt-3 rounded-pill px-4"><i class="bi bi-plus-lg me-2"></i>Create Record</a>
+                  </div>
+                </div>
               {% endif %}
             {% else %}
-              <h3 class="text-center">Please login to view and add records.</h3>
+              <div class="text-center py-5">
+                <i class="bi bi-lock text-muted" style="font-size: 3rem;"></i>
+                <h3 class="mt-3">Please login to view records</h3>
+                <a href="{% url 'login' %}" class="btn btn-primary mt-3 rounded-pill px-4"><i class="bi bi-box-arrow-in-right me-2"></i>Login</a>
+              </div>
             {% endif %}
           </div>
         </div>
@@ -78,5 +108,4 @@
     </div>
   </div>
   <script src="{% static 'js/sweetie_alert.js' %}"></script>
-  {% comment %} <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> {% endcomment %}
 {% endblock %}
