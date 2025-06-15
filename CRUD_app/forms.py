@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm , UserChangeForm , SetPasswordForm
 from django import forms
+from .models import Record
 
 # we use widget tweaks to add bootstrap classes to the form fields
 class UserRegistrationForm(UserCreationForm):
@@ -54,3 +55,15 @@ class UserRegistrationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['name', 'last_name', 'email', 'username', 'password1', 'password2']
+
+
+
+class AddRecordForm(forms.ModelForm):
+    class Meta:
+        model = Record
+        exclude = ['created_at']
+
+# class AddRecordForm(forms.ModelForm):
+#     class Meta:
+#         model = Record
+#         exclude = []

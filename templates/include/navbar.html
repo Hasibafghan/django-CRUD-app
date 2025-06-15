@@ -1,85 +1,220 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    {% comment %} <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous" /> {% endcomment %}
-    {% comment %} <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" /> {% endcomment %}
-    {% include 'include/links.html' %}
-    <!-- SweetAlert2 CDN -->
-
-  </head>
-  <body>
-    <div class="container">
-      <nav class="navbar navbar-expand-lg">
-        <div class="container-fluid">
-          <a class="navbar-brand me-5" href="{% url 'home' %}"><i class="bi bi-github fs-2"></i></a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="{% url 'records_view' %}">Records</a>
-              </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</a>
-                <ul class="dropdown-menu">
-                  <li>
-                    <a class="dropdown-item" href="#">Action</a>
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">Another action</a>
-                  </li>
-                  <li>
-                    <hr class="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a class="dropdown-item" href="#">Something else here</a>
-                  </li>
-                </ul>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link disabled" aria-disabled="true">Disabled</a>
-              </li>
-            </ul>
-            {% comment %} <form class="d-flex" role="search">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form> {% endcomment %}
-            <ul class="navbar-nav ms-3">
-              
-                {% if user.is_authenticated %}
-                <li class="nav-item dropdown">
-                  <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-person-circle fs-3 me-2"></i>Hi {{user.username}}
-                  </a>
-                  <ul class="dropdown-menu" aria-labelledby="accountDropdown">
-                    <li>
-                      <a class="dropdown-item d-flex align-items-center" href="{% url 'logout' %}"><i class="bi bi-person me-2"></i>Logout</a>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Records Management System</title>
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Custom CSS -->
+    <style>
+        :root {
+            --primary-color: #6366f1;
+            --hover-color: #4f46e5;
+            --dark-color: #1e293b;
+            --light-color: #f8fafc;
+        }
+        
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 0.8rem 1rem;
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+        
+        .navbar-brand i {
+            color: var(--primary-color);
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand:hover i {
+            transform: rotate(15deg);
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            color: var(--dark-color);
+            padding: 0.5rem 1rem;
+            margin: 0 0.2rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--primary-color);
+        }
+        
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .dropdown-item {
+            padding: 0.5rem 1.5rem;
+            border-radius: 0.25rem;
+            margin: 0.2rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--hover-color);
+            border-color: var(--hover-color);
+        }
+        
+        .user-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        @media (max-width: 992px) {
+            .navbar-collapse {
+                padding: 1rem 0;
+            }
+            
+            .nav-link {
+                margin: 0.2rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <!-- Brand/logo -->
+            <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                <i class="bi bi-database fs-3 me-2"></i>
+                <span class="d-none d-sm-inline">RecordFlow</span>
+            </a>
+            
+            <!-- Mobile toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
+                <i class="bi bi-list"></i>
+            </button>
+            
+            <!-- Navbar content -->
+            <div class="collapse navbar-collapse" id="mainNavbar">
+                <!-- Left side navigation -->
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'home' %}">
+                            <i class="bi bi-house-door me-1"></i> Home
+                        </a>
                     </li>
-                  </ul>
-                  {% else %}
-                </li>
-                  <a class="btn" href="{% url 'login' %}">Sign in</a>
-                </li>
-                </li>
-                  <a class="btn btn-outline-dark  border border-dark" href="{% url 'signup' %}">Sign up</a>
-                </li>
-                {% endif %}
-              
-            </ul>
-          </div>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'records_view' %}">
+                            <i class="bi bi-table me-1"></i> Records
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="bi bi-collection me-1"></i> More
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><h6 class="dropdown-header">Categories</h6></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-people me-2"></i> Teams</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-graph-up me-2"></i> Analytics</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i> Settings</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <!-- Right side navigation -->
+                <ul class="navbar-nav ms-auto">
+                    <!-- Search (visible on desktop) -->
+                    <li class="nav-item d-none d-lg-flex align-items-center me-2">
+                        <div class="input-group">
+                            <input type="text" class="form-control border-end-0" placeholder="Search...">
+                            <button class="btn btn-outline-secondary border-start-0" type="button">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </li>
+                    
+                    <!-- User dropdown -->
+                    {% if user.is_authenticated %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                            <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=6366f1&color=fff" class="user-avatar">
+                            <span class="d-none d-lg-inline">{{ user.username }}</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><h6 class="dropdown-header">Signed in as</h6></li>
+                            <li><div class="dropdown-item-text text-truncate">{{ user.email|default:user.username }}</div></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-person me-2"></i> Profile</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-gear me-2"></i> Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                    <i class="bi bi-box-arrow-right me-2"></i> Sign out
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="btn btn-outline-primary me-2" href="{% url 'login' %}">
+                            <i class="bi bi-box-arrow-in-right me-1"></i> Sign in
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary" href="{% url 'signup' %}">
+                            <i class="bi bi-person-plus me-1"></i> Sign up
+                        </a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
-      </nav>
-    </div>
+    </nav>
 
+    <!-- JavaScript Links (Properly Included) -->
+    <!-- Bootstrap Bundle with Popper (MUST be loaded before custom JS) -->
     
-  </body>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+    <!-- Custom JS -->
+    {% comment %} <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize all Bootstrap tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+            
+            // Highlight current page in navbar
+            var currentUrl = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(function(link) {
+                if (link.getAttribute('href') === currentUrl) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Mobile menu close on click
+            var navbarCollapse = document.getElementById('mainNavbar');
+            if (navbarCollapse) {
+                navbarCollapse.addEventListener('click', function(e) {
+                    if (e.target.tagName === 'A') {
+                        var bsCollapse = new bootstrap.Collapse(navbarCollapse);
+                        bsCollapse.hide();
+                    }
+                });
+            }
+        });
+    </script> {% endcomment %}
+</body>
 </html>

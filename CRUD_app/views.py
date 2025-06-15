@@ -4,13 +4,32 @@ from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Record
-from .forms import UserRegistrationForm
+from .forms import UserRegistrationForm , AddRecordForm
 
 
 
 # Create your views here.
 def home(request):
     return render(request , 'home.html' , {})
+
+
+
+def add_record(request):
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = AddRecordForm(request.POST, request.FILES)  # Correct way
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Record added successfully')
+                return redirect('records_view')
+            else:
+                messages.error(request, 'Error adding record. Please correct the errors below.')
+        else:
+            form = AddRecordForm()
+        return render(request, 'add_record.html', {'form': form})
+    else:
+        messages.error(request, 'You must login first to access this page!')
+        return redirect('login')
 
 
 
