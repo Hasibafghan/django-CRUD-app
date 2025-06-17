@@ -32,6 +32,25 @@ def add_record(request):
         return redirect('login')
 
 
+def update_record(request, pk):
+    current_record = get_object_or_404(Record, pk=pk)
+    if request.user.is_authenticated:
+        if request.method == 'POST':
+            form = AddRecordForm(request.POST, request.FILES, instance=current_record)
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Record updated successfully')
+                return redirect('records_view')
+            else:
+                messages.error(request, 'Update record failed!')
+        else:
+            form = AddRecordForm(instance=current_record)
+        return render(request, 'update_record.html', {'form': form})
+    else:
+        messages.error(request, 'You have to sign in')
+        return redirect('login')
+
+
 
 def record_view(request):
         records = Record.objects.all()

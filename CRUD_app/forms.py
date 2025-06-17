@@ -63,7 +63,3 @@ class AddRecordForm(forms.ModelForm):
         model = Record
         exclude = ['created_at']
 
-# class AddRecordForm(forms.ModelForm):
-#     class Meta:
-#         model = Record
-#         exclude = []
