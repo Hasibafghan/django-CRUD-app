@@ -12,10 +12,6 @@
               <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
                 <h2 class="mb-0 fw-bold text-dark"><i class="bi bi-funnel me-2"></i>Filter Records</h2>
                 <div class="d-flex flex-column flex-md-row w-100 w-md-auto gap-2">
-                  <!-- Back to List Button (visible only when searching) -->
-                  {% comment %} {% if search_query %}
-                    <a href="{% url 'records_view' %}" class="btn btn-outline-secondary rounded-pill me-md-2"><i class="bi bi-arrow-left p-3 me-1"></i> Back to List</a>
-                  {% endif %} {% endcomment %}
 
                   <!-- Search Form -->
                   <form action="{% url 'search_record' %}" method="GET" class="position-relative flex-grow-1" role="search">

@@ -12,29 +12,20 @@
               <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
                 <h2 class="mb-0 fw-bold text-dark"><i class="bi bi-journal-text me-2"></i>Records Management</h2>
                 <div class="d-flex flex-column flex-md-row w-100 w-md-auto gap-2">
-
                   <form action="{% url 'search_record' %}" method="GET" class="position-relative flex-grow-1" role="search">
-    <div class="position-relative">
-        <input 
-            style="outline: none !important; box-shadow: none !important; padding-right: 90px;" 
-            class="form-control py-2 rounded-pill" 
-            name="search" 
-            type="search" 
-            placeholder="🔍 Filter records..." 
-            aria-label="Search"
-            value="{{ search_query|default:'' }}" />
-        <button type="submit" class="btn btn-primary position-absolute top-50 end-0 translate-middle-y rounded-pill">
-            <span class="d-none d-md-inline">Search</span>
-            <i class="bi bi-search d-md-none"></i>
-        </button>
-    </div>
-</form>
-
+                    <div class="position-relative">
+                      <input required style="outline: none !important; box-shadow: none !important; padding-right: 90px;" class="form-control py-2 rounded-pill" name="search" type="search" placeholder="🔍 Filter records..." aria-label="Search" value="{{ search_query|default:'' }}" />
+                      <button type="submit" class="btn btn-primary position-absolute top-50 end-0 translate-middle-y rounded-pill">
+                        <span class="d-none d-md-inline">Search</span>
+                        <i class="bi bi-search d-md-none"></i>
+                      </button>
+                    </div>
+                  </form>
 
                   <!-- Add Record Button -->
                   <a href="{% url 'add_record' %}" style="background-color: #28a745 ; color: white;" class="btn rounded-pill px-2 px-md-4 d-flex align-items-center justify-content-center">
                     <i class="bi bi-plus-lg me-md-1"></i>
-                    <span class="d-none d-md-inline">Add Record</span>
+                    <span class="d-none d-md-inline">Add</span>
                     <span class="d-inline d-md-none">Add</span>
                   </a>
                 </div>

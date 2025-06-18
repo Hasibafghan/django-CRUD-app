@@ -17,6 +17,10 @@ def home(request):
 
 
 def search_record(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'You must login first to access this page!')
+        return redirect('login')
+
     search_query = request.GET.get('search', '').strip()
     records = Record.objects.none()  # default empty queryset
 
