@@ -1,13 +1,14 @@
-# Django CRUD App
+# Django CRUDS App
+![](static/assets/preview.png)
 
 ## Project Description
-This is a Django-based CRUD (Create, Read, Update, Delete) web application designed to manage records efficiently. The app provides user authentication, record management, and search functionality with a clean and responsive user interface.
+This is a Django-based CRUD (Create, Read, Update, Delete , Search) web application designed to manage records efficiently. The app provides user authentication, record management, and search functionality with a clean and responsive user interface and Beautiful UI.
 
 ## Features
 - User registration and login system
 - Create, view, update, and delete records
 - Search records by various criteria
-- Responsive UI with templates and static assets
+- Responsive, modern UI & UX with templates and static assets
 - Image upload support for records
 - Secure user authentication and session management
 
@@ -21,7 +22,7 @@ This is a Django-based CRUD (Create, Read, Update, Delete) web application desig
 ### Steps
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git@github.com:hasibafghan/advance-django-CRUD-app.git
    cd django-CRUD-app
    ```
 
