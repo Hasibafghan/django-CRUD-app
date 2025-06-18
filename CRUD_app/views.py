@@ -5,12 +5,41 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from .models import Record
 from .forms import UserRegistrationForm , AddRecordForm
-
+from django.db.models import Value, CharField
+from django.db.models.functions import Concat
+from django.db.models import Q
 
 
 # Create your views here.
 def home(request):
     return render(request , 'home.html' , {})
+
+
+
+def search_record(request):
+    search_query = request.GET.get('search', '').strip()
+    records = Record.objects.none()  # default empty queryset
+
+    if request.method == 'GET' and search_query:
+        # Annotate each record with full_name
+        records = Record.objects.annotate(
+            full_name=Concat('first_name', Value(' '), 'last_name', output_field=CharField())
+        ).filter(
+            Q(id__icontains=search_query) |
+            Q(first_name__icontains=search_query) |
+            Q(last_name__icontains=search_query) |
+            Q(full_name__icontains=search_query)  # search by full name
+        ).distinct()
+
+        if not records.exists():
+            messages.info(request, 'No records found matching your search.')
+
+    context = {
+        'search_query': search_query,
+        'records': records,
+        'searched': bool(search_query)
+    }
+    return render(request, 'search_record.html', context)
 
 
 
@@ -30,6 +59,7 @@ def add_record(request):
     else:
         messages.error(request, 'You must login first to access this page!')
         return redirect('login')
+
 
 
 def update_record(request, pk):
@@ -75,6 +105,7 @@ def record_delete(request, pk):
         return redirect('records_view')
     messages.error(request, 'Invalid request method')
     return redirect('record_detail', pk=pk)
+
 
 
 def signup_user(request):
@@ -151,22 +182,6 @@ def login_user(request):
             return redirect('login')
 
     return render(request, 'login_user.html')
-
-
-
-# def login_user(request):
-#     if request.method == 'POST':
-#         username = request.POST.get('username')
-#         password = request.POST.get('password')
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             login(request, user)
-#             messages.success(request , 'Login successfully')
-#             return redirect('home')
-#         else:
-#             messages.error(request, 'Invalid username or password')
-#             return redirect('login')
-#     return render(request, 'login_user.html')
 
 
 

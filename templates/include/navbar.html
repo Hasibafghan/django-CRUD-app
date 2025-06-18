@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Records Management System</title>
-    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <!-- Custom CSS -->
     <style>
         :root {
             --primary-color: #6366f1;
@@ -36,7 +34,7 @@
             transform: rotate(15deg);
         }
         
-        /* Underline for non-dropdown nav items */
+        /* Fixed underline for active page */
         .nav-item:not(.dropdown) .nav-link {
             position: relative;
             padding-bottom: 6px;
@@ -54,11 +52,14 @@
             transition: width 0.3s ease, left 0.3s ease;
         }
         
-        .nav-item:not(.dropdown) .nav-link:hover::after,
-        .nav-item:not(.dropdown) .nav-link.active::after {
+        .nav-item:not(.dropdown) .nav-link:hover::after {
             width: calc(100% - 2rem);
-            left: 50%;
-            transform: translateX(-50%);
+        }
+        
+        /* Active state based on current URL */
+        .nav-item:not(.dropdown) .nav-link[href="{{ request.path }}"]::after,
+        .nav-item:not(.dropdown) .nav-link.active::after {
+            width: calc(100% - 2rem) !important;
         }
         
         .nav-link {
@@ -74,7 +75,7 @@
             color: var(--primary-color);
         }
         
-        /* Enhanced Search Bar */
+        /* Fixed search bar with stable icon */
         .search-container {
             position: relative;
             width: 240px;
@@ -98,6 +99,7 @@
             top: 50%;
             transform: translateY(-50%);
             color: #94a3b8;
+            pointer-events: none; /* Prevents icon from interfering with hover */
         }
         
         .search-btn {
@@ -170,31 +172,28 @@
 <body>
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
-            <!-- Brand/logo -->
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
                 <i class="bi bi-database fs-3 me-2"></i>
                 <span class="d-none d-sm-inline">RecordFlow</span>
             </a>
             
-            <!-- Mobile toggle -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
                 <i class="bi bi-list"></i>
             </button>
             
-            <!-- Navbar content -->
             <div class="collapse navbar-collapse" id="mainNavbar">
-                <!-- Left side navigation -->
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link active" href="{% url 'home' %}">
+                        <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="{% url 'home' %}">
                             <i class="bi bi-house-door me-1"></i> Home
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'records_view' %}">
+                        <a class="nav-link {% if request.path == '/records/' %}active{% endif %}" href="{% url 'records_view' %}">
                             <i class="bi bi-table me-1"></i> Records
                         </a>
                     </li>
+                    
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
                             <i class="bi bi-collection me-1"></i> More
@@ -209,25 +208,27 @@
                     </li>
                 </ul>
                 
-                <!-- Right side navigation -->
-                <ul class="navbar-nav ms-auto">
-                    <!-- Enhanced Search Bar -->
-                    <li class="nav-item d-none d-lg-flex align-items-center me-3">
-                        <div class="search-container">
-                            <i class="bi bi-search search-icon"></i>
-                            <input type="text" class="form-control search-input" placeholder="Search...">
-                            <button class="search-btn">
-                                <i class="bi bi-arrow-right"></i>
-                            </button>
-                        </div>
-                    </li>
-                    
-                    <!-- User dropdown -->
+                <ul class="navbar-nav ms-auto d-flex align-items-center gap-2 ">
+            <form action="{% url 'search_record' %}" method="GET" class="position-relative flex-grow-1 w-100" role="search">
+                    <div class="position-relative">
+                      <input style="outline: none !important; box-shadow: none !important; padding-right: 90px;" 
+                             class="form-control py-2 rounded-pill w-100" 
+                             name="search" 
+                             type="search" 
+                             placeholder="🔍 Filter records..." 
+                             aria-label="Filter"
+                             value="{{ search_query|default:'' }}" />
+                      <button type="submit" class="btn btn-primary position-absolute top-50 end-0 translate-middle-y rounded-pill">
+                        <span class="d-none d-md-inline">Search</span>
+                        <i class="bi bi-funnel d-md-none"></i>
+                      </button>
+                    </div>
+                  </form>
                     {% if user.is_authenticated %}
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
                             <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=6366f1&color=fff" class="user-avatar">
-                            <span class="d-none d-lg-inline">{{ user.username }}</span>
+                            <span class=" d-lg-inline">{{ user.username }}</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><h6 class="dropdown-header">Signed in as</h6></li>

@@ -22,14 +22,14 @@
       <script>
       {% for message in messages %}
       Swal.fire({
-                icon: '{% if "error" in message.tags %}error{% else %}success{% endif %}', // dynamic icon
-                title: '{{ message.tags|capfirst }}',
-                text: '{{ message }}',
-                timer: 1500,
-                timerProgressBar: true,
-                showConfirmButton: false
-            });
-        {% endfor %}
+          icon: '{% if "error" in message.tags %}error{% elif "info" in message.tags %}info{% else %}success{% endif %}', // dynamic icon
+          title: '{{ message.tags|capfirst }}',
+          text: '{{ message }}',
+          timer: 1500,
+          timerProgressBar: true,
+          showConfirmButton: false
+        });
+      {% endfor %}
       </script>
     {% endif %}
   </body>
